@@ -1,8 +1,12 @@
-import Home from "../Pages/Home";
-import NotFound from "../Pages/NotFound";
+import Home from "./Home";
+import Login from "./Login";
+import NotFound from "./NotFound";
+import Signup from "./Signup";
 
 const page_routes = [
   { path: '/', page: Home, protected: false },
+  { path: '/login', page: Login, protected: false },
+  { path: '/signup', page: Signup, protected: false },
   { path: '*', page: NotFound },  
 ];
 
