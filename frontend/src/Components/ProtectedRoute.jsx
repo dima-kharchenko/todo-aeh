@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import Loading from "./Loading"
-//import { checkAuth } from "../api";
+import { checkAuth } from "../api";
 
 function ProtectedRoute({ children }){
     const [isAuthenticated, setIsAuthenticated] = useState(false)
