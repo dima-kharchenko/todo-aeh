@@ -1,3 +1,4 @@
+import { createTask } from "../api";
 import Header from "../Components/Header";
 import { useState } from "react";
 function Home() {
@@ -7,6 +8,8 @@ function Home() {
         e.preventDefault()
         if(newTask){
             console.log(newTask)
+            const res = await createTask(newTask, null, null)
+            console.log(res)
             setNewTask("")
         }
     }

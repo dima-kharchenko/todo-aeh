@@ -39,3 +39,8 @@ export const checkAuth = async () => {
     return response.data
 }
 
+export const createTask = async (body, category, deadline) => {
+    const response = await api.post("task/create", {body, category, deadline})
+    return response.data
+}
+

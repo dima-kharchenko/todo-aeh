@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import generics
 
 
-from .serializers import UserSerializer
+from .serializers import TaskSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.views import APIView
@@ -94,4 +94,11 @@ class IsAuthenticatedView(APIView):
 
     def post(self, _):
         return Response({'is_authenticated': True})
+
+class CreateTaskView(generics.CreateAPIView):
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
