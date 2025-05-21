@@ -27,7 +27,7 @@ function Home() {
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                     placeholder="Add new task..."
-                    className="bg-surface-a10 px-4 py-2 w-full rounded-lg ring-1 ring-primary-a0 focus:outline-none focus:ring-2 hover:ring-2 transition"
+                    className="bg-surface-a10 px-4 py-2 w-full rounded-lg focus:outline-none focus:ring-2 hover:ring-2 ring-primary-a0 transition"
                 />
                 <button type="submit" className="ml-4 bg-primary-a0 px-4 py-2 rounded-lg cursor-pointer ring-primary-a0 hover:ring-2 active:ring-0 transition">Add</button>
             </form>
