@@ -39,8 +39,18 @@ export const checkAuth = async () => {
     return response.data
 }
 
-export const createTask = async (body, category, deadline) => {
-    const response = await api.post("task/create", {body, category, deadline})
+export const createTask = async (task) => {
+    const response = await api.post("task/create/", task)
+    return response.data
+}
+
+export const updateTask = async (task) => {
+    const response = await api.put("task/update/", task)
+    return response.data
+}
+
+export const getTasks = async () => {
+    const response = await api.get("tasks/", {params: {}})
     return response.data
 }
 

@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from rest_framework import generics
 
+from api.models import Task
+
 
 from .serializers import TaskSerializer, UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -101,4 +103,25 @@ class CreateTaskView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class UpdateTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        data = request.data
+
+        count = Task.objects.filter(user=user, id=data['id']).update(**data)
+        print(count)
+
+        return Response({"updated": count})
+
+class GetTasksView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        data = Task.objects.filter(user=request.user)
+        serializer = TaskSerializer(data, many=True)
+
+        return Response(serializer.data)
 

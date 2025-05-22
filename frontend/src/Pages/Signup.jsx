@@ -39,7 +39,7 @@ function Signup() {
             if (!err?.response) {
                 setError('No Server Response');
             } else {
-                setError('Login Failed')
+                setError('Sign Up Failed')
             }
         }
     };
