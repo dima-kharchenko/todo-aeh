@@ -67,15 +67,15 @@ function Home() {
                             return (
                             <p className={`text-sm my-auto ${task.done ? 'text-surface-a30' : 'text-surface-a50'} transition`}>
                                 {isToday ? 
+                                new Date(task.deadline).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })
+                                : 
                                 new Date(task.deadline).toLocaleString("pl-PL", {
                                     day: "2-digit",
                                     month: "2-digit",
                                     year: "numeric",
                                     hour: "2-digit",
                                     minute: "2-digit",
-                                })
-                                : 
-                                new Date(task.deadline).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })}
+                                })}
                             </p>
                         )
                         })()}
