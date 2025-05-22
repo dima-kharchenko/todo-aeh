@@ -29,9 +29,7 @@ function Home() {
         const task = tasks.find(t => t.id === id);
         const newPriority = task.priority === priority ? 0 : priority;
 
-        const updatedTasks = tasks.map(task =>
-            task.id === id ? { ...task, priority: newPriority } : task
-        );
+        const updatedTasks = tasks.map(task => task.id === id ? { ...task, priority: newPriority } : task);
         setTasks(updatedTasks);
 
         const updatedTask = updatedTasks.find(t => t.id === id);
