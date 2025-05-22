@@ -6,7 +6,7 @@ function Home() {
     const [tasks, setTasks] = useState([])
     const [hoveredPriority, setHoveredPriority] = useState({});
     useEffect(() => {
-        const fetchData = async () => {
+        (async () => {
             try {
                 let data = await getTasks()
                 data = data.filter(task => !task.done).sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
@@ -14,8 +14,7 @@ function Home() {
             } catch(err) {
                 console.log(err)
             }
-        }
-        fetchData()
+        })()
     }, [])
 
     const handleCheckbox = async (id) => {
@@ -84,7 +83,7 @@ function Home() {
                           {[1, 2, 3].map((priority) => {
                             const active = hoveredPriority[task.id] !== undefined
                               ? priority <= hoveredPriority[task.id]
-                              : priority <= task.priority;
+                              : priority <= task.priority
 
                             return (
                               <div
@@ -94,9 +93,9 @@ function Home() {
                                 }
                                 onMouseLeave={() =>
                                   setHoveredPriority((prev) => {
-                                    const updated = { ...prev };
-                                    delete updated[task.id];
-                                    return updated;
+                                    const updated = { ...prev }
+                                    delete updated[task.id]
+                                    return updated
                                   })
                                 }
                                 onClick={() => handlePriorityChange(task.id, priority)}
