@@ -14,7 +14,7 @@ function NewTask({ setTasks }) {
 
     return(
     <>
-    <form onSubmit={handleSubmit} className="flex w-3/4 mx-auto">
+    <form onSubmit={handleSubmit} className="flex mx-auto">
         <input 
             type="text"
             id="newTask"
