@@ -110,9 +110,7 @@ class UpdateTaskView(APIView):
     def put(self, request):
         user = request.user
         data = request.data
-
         count = Task.objects.filter(user=user, id=data['id']).update(**data)
-        print(count)
 
         return Response({"updated": count})
 

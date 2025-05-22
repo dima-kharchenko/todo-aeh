@@ -7,7 +7,7 @@ function ProtectedRoute({ children }){
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        const auth = async () => {
+        (async () => {
             try {
                 await checkAuth();
                 setIsAuthenticated(true);
@@ -16,8 +16,7 @@ function ProtectedRoute({ children }){
             } finally {
                 setLoading(false);
             }
-        };
-        auth();
+        })()
     }, [])
     if(loading) {
         return <Loading />

@@ -1,20 +1,20 @@
 import { createTask } from "../api";
 import { useState } from "react";
 function NewTask({ setTasks }) {
-    const [newTask, setNewTask] = useState({body: '', category: '', done: false, deadline: null, priority: ''})
+    const [newTask, setNewTask] = useState({body: '', category: '', done: false, deadline: null, priority: 0})
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(newTask){
             const res = await createTask(newTask)
-            setNewTask({body: '', category: '', done: false, deadline: null, priority: ''})
+            setNewTask({body: '', category: '', done: false, deadline: null, priority: 0})
             setTasks(p => [res, ...p])
         }
     }
 
     return(
     <>
-    <form onSubmit={handleSubmit} className="flex w-3/4 mx-auto">
+    <form onSubmit={handleSubmit} className="flex mx-auto">
         <input 
             type="text"
             id="newTask"
