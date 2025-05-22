@@ -4,6 +4,7 @@ import NewTask from "../Components/NewTask";
 import { getTasks, updateTask } from "../api";
 function Home() {
     const [tasks, setTasks] = useState([])
+    const [hoveredPriority, setHoveredPriority] = useState({});
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -24,6 +25,19 @@ function Home() {
         const updatedTask = updatedTasks.find(task => task.id === id)
         await updateTask(updatedTask)
     }
+    const handlePriorityChange = async (id, priority) => {
+        const task = tasks.find(t => t.id === id);
+        const newPriority = task.priority === priority ? 0 : priority;
+
+        const updatedTasks = tasks.map(task =>
+            task.id === id ? { ...task, priority: newPriority } : task
+        );
+        setTasks(updatedTasks);
+
+        const updatedTask = updatedTasks.find(t => t.id === id);
+        await updateTask(updatedTask);
+    };
+
     return(
     <>
     <Header />
@@ -45,11 +59,7 @@ function Home() {
                         <a href={`/category/${task.category}`} className="mr-2 text-surface-a30 hover:text-primary-a0 transition">{task.category}</a>
                     }
                     <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
-                    <div className="flex ml-auto space-x-2">
-                        {task.priority && 
-                            <p className={`my-auto text-sm ${task.done ? 'text-surface-a30' : 'text-surface-a50'} transition`}>{task.priority}</p>
-                        } 
-
+                    <div className="flex ml-auto gap-2">
                         {task.deadline && (() => {
                             const deadline = new Date(task.deadline);
                             const now = new Date();
@@ -72,6 +82,33 @@ function Home() {
                             </p>
                         )
                         })()}
+                        <div className="flex gap-1 my-auto">
+                          {[1, 2, 3].map((priority) => {
+                            const active = hoveredPriority[task.id] !== undefined
+                              ? priority <= hoveredPriority[task.id]
+                              : priority <= task.priority;
+
+                            return (
+                              <div
+                                key={priority}
+                                onMouseEnter={() =>
+                                  setHoveredPriority((prev) => ({ ...prev, [task.id]: priority }))
+                                }
+                                onMouseLeave={() =>
+                                  setHoveredPriority((prev) => {
+                                    const updated = { ...prev };
+                                    delete updated[task.id];
+                                    return updated;
+                                  })
+                                }
+                                onClick={() => handlePriorityChange(task.id, priority)}
+                                className={`w-3 h-3 rounded-sm cursor-pointer transition ${
+                                  active && !task.done ? "bg-primary-a30" : "bg-surface-a20"
+                                }`}
+                              />
+                            );
+                          })}
+                        </div>
                     </div>
                 </div>
             )}
