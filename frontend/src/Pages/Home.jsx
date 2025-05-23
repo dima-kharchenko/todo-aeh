@@ -7,6 +7,8 @@ import { getTasks, updateTask } from "../api";
 
 function Home() {
     const [tasks, setTasks] = useState([])
+    const [dropdownId, setDropdownId] = useState(null);
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -45,9 +47,17 @@ function Home() {
                             className="w-full h-full my-1 cursor-pointer focus:outline-none appearance-none bg-surface-a20 rounded-sm hover:ring-2 ring-primary-a0 checked:bg-primary-a0 transition"
                         />
                     </form>
-                    <DropdownCategories tasks={tasks} task={task} setTasks={setTasks}/> 
+                    <DropdownCategories 
+                        tasks={tasks} 
+                        task={task} 
+                        setTasks={setTasks} 
+                        dropdownId={dropdownId} 
+                        setDropdownId={setDropdownId} 
+                        categories={categories} 
+                        setCategories={setCategories}
+                    /> 
                     <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
-                    <div className="flex ml-auto gap-2">
+                    <div className="flex ml-auto gap-4">
                         {task.deadline && (() => {
                             const deadline = new Date(task.deadline);
                             const now = new Date();
@@ -56,7 +66,7 @@ function Home() {
                                 deadline.getMonth() === now.getMonth() &&
                                 deadline.getFullYear() === now.getFullYear();
                             return (
-                            <p className={`text-sm my-auto ${task.done ? 'text-surface-a30' : 'text-surface-a50'} transition`}>
+                            <p className={`text-sm my-auto ${task.done ? 'text-surface-a30' : 'text-surface-a40'} transition`}>
                                 {isToday ? 
                                 new Date(task.deadline).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })
                                 : 

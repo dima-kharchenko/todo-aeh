@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { getTasks, updateTask } from "../api"
 
-function DropdownCategories({tasks, task, setTasks}){
-    const [categories, setCategories] = useState([])
+function DropdownCategories({tasks, task, setTasks, dropdownId, setDropdownId, categories, setCategories}){
     const [newCategory, setNewCategory] = useState('')
-    const [dropdownOpen, setDropdownOpen] = useState(null)
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null);
 
@@ -12,7 +10,7 @@ function DropdownCategories({tasks, task, setTasks}){
         (async () => {
             try {
                 let data = await getTasks()
-                data = data.filter(task => !task.done).sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
+                data = data.filter(task => !task.done)
                 setCategories([...new Set(data.map(task => task.category).filter(Boolean))])
             } catch(err) {
                 console.log(err)
@@ -26,7 +24,7 @@ function DropdownCategories({tasks, task, setTasks}){
                 !event.target.closest(".dropdown") &&
                 !event.target.closest(".dropdown-button")
             ) {
-                setDropdownOpen(null);
+                setDropdownId(null);
             }
         }
 
@@ -59,16 +57,16 @@ function DropdownCategories({tasks, task, setTasks}){
     }
 
     const toggleDropdown = (id) => {
-        setDropdownOpen(prev => prev === id ? null : id)
+        setDropdownId(prev => (prev === id ? null : id));
     }
 
     return(
         task.category && 
-        <>
-        <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2 text-surface-a30 ${task.done ? '' : 'hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
+        <div>
+        <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2  ${task.done ? 'text-surface-a30' : 'text-surface-a40 hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
         {!task.done && 
         <div ref={dropdownRef}
-        className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownOpen === task.id ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+        className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownId === task.id ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
             >
             <ul className="text-surface-a50 select-none">
             {categories.map((item, index) =>
@@ -90,7 +88,7 @@ function DropdownCategories({tasks, task, setTasks}){
             </ul>
         </div>
         }
-        </>
+        </div>
     )
 }
 
