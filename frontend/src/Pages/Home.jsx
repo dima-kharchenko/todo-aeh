@@ -1,21 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
 import { getTasks, updateTask } from "../api";
 function Home() {
     const [tasks, setTasks] = useState([])
+    const [categories, setCategories] = useState([])
+
     const [hoveredPriority, setHoveredPriority] = useState({});
+
+    const [dropdownOpen, setDropdownOpen] = useState({})
+    const dropdownRef = useRef(null)
+    const buttonRef = useRef(null);
+    
     useEffect(() => {
         (async () => {
             try {
                 let data = await getTasks()
                 data = data.filter(task => !task.done).sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
                 setTasks(data)
+                setCategories([...new Set(data.map(task => task.category).filter(Boolean))])
             } catch(err) {
                 console.log(err)
             }
         })()
     }, [])
+
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (
+                !event.target.closest(".dropdown") &&
+                !event.target.closest(".dropdown-button")
+            ) {
+                setDropdownOpen({});
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const handleCheckbox = async (id) => {
         const updatedTasks = tasks.map(task => task.id === id ? { ...task, done: !task.done } : task).sort((a, b) => b.id - a.id)
@@ -35,6 +60,14 @@ function Home() {
         await updateTask(updatedTask);
     };
 
+    const toggleDropdown = (id) => {
+        setDropdownOpen(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
+
     return(
     <>
     <Header />
@@ -53,7 +86,31 @@ function Home() {
                         />
                     </form>
                     {task.category && 
-                        <a href={`/category/${task.category}`} className="mr-2 text-surface-a30 hover:text-primary-a0 transition">{task.category}</a>
+                        <div>
+                        <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2 text-surface-a30 ${task.done ? '' : 'hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
+                        {!task.done && 
+                        <div ref={dropdownRef}
+                        className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-primary-a0 transition ${ dropdownOpen[task.id] ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+                        >
+                            <ul className="text-surface-a50 select-none">
+                            {categories.map((item, index) =>
+                                <li key={index} className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${task.category === item ? 'bg-primary-a0 text-white' : 'bg-surface-a20 '}`}>
+                                {item} 
+                                </li>
+                            )}
+                                <li key="new-collection" className="mx-2">
+                                    <form>
+                                        <input
+                                            placeholder="Add"
+                                            className="mb-2 px-2 py-1 w-full rounded-lg text-center focus:outline-none field-sizing-content bg-surface-a20 placeholder:text-surface-a50 text-sm focus:placeholder:text-transparent transition"
+                                            type="text"
+                                            />
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                        }
+                        </div>
                     }
                     <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
                     <div className="flex ml-auto gap-2">
@@ -98,9 +155,9 @@ function Home() {
                                     return updated
                                   })
                                 }
-                                onClick={() => handlePriorityChange(task.id, priority)}
-                                className={`w-3 h-3 rounded-sm cursor-pointer transition ${
-                                  active && !task.done ? "bg-primary-a30" : "bg-surface-a20"
+                                onClick={!task.done ? () => handlePriorityChange(task.id, priority) : ''}
+                                className={`w-3 h-3 rounded-sm transition ${
+                                  active && !task.done ? "bg-primary-a30 cursor-pointer" : "bg-surface-a20"
                                 }`}
                               />
                             );
