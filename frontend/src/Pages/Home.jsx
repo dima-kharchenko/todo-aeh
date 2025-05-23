@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
-import { getTasks, updateTask } from "../api";
 import DropdownCategories from "../Components/DropdownCategories";
+import Priority from "../Components/Priority";
+import { getTasks, updateTask } from "../api";
+
 function Home() {
     const [tasks, setTasks] = useState([])
-    const [hoveredPriority, setHoveredPriority] = useState({});
 
     useEffect(() => {
         (async () => {
@@ -27,17 +28,6 @@ function Home() {
         await updateTask(updatedTask)
     }
 
-    const handlePriority = async (id, priority) => {
-        const task = tasks.find(t => t.id === id)
-        const newPriority = task.priority === priority ? 0 : priority
-
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, priority: newPriority } : task)
-        setTasks(updatedTasks)
-
-        const updatedTask = updatedTasks.find(t => t.id === id)
-        await updateTask(updatedTask)
-    }
-
     return(
     <>
     <Header />
@@ -55,9 +45,7 @@ function Home() {
                             className="w-full h-full my-1 cursor-pointer focus:outline-none appearance-none bg-surface-a20 rounded-sm hover:ring-2 ring-primary-a0 checked:bg-primary-a0 transition"
                         />
                     </form>
-                    {task.category && 
-                       <DropdownCategories tasks={tasks} task={task} setTasks={setTasks}/> 
-                    }
+                    <DropdownCategories tasks={tasks} task={task} setTasks={setTasks}/> 
                     <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
                     <div className="flex ml-auto gap-2">
                         {task.deadline && (() => {
@@ -82,33 +70,7 @@ function Home() {
                             </p>
                         )
                         })()}
-                        <div className="flex gap-1 my-auto">
-                          {[1, 2, 3].map((priority) => {
-                            const active = hoveredPriority[task.id] !== undefined
-                              ? priority <= hoveredPriority[task.id]
-                              : priority <= task.priority
-
-                            return (
-                              <div
-                                key={priority}
-                                onMouseEnter={() =>
-                                  setHoveredPriority((prev) => ({ ...prev, [task.id]: priority }))
-                                }
-                                onMouseLeave={() =>
-                                  setHoveredPriority((prev) => {
-                                    const updated = { ...prev }
-                                    delete updated[task.id]
-                                    return updated
-                                  })
-                                }
-                                onClick={!task.done ? () => handlePriority(task.id, priority) : ''}
-                                className={`w-3 h-3 rounded-sm transition ${
-                                  active && !task.done ? "bg-primary-a30 cursor-pointer" : "bg-surface-a20"
-                                }`}
-                              />
-                            );
-                          })}
-                        </div>
+                        <Priority tasks={tasks} task={task} setTasks={setTasks}/>
                     </div>
                 </div>
             )}

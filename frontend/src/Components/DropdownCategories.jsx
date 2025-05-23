@@ -38,7 +38,7 @@ function DropdownCategories({tasks, task, setTasks}){
 
     const handleCategory = async (id, category) => {
         const task = tasks.find(t => t.id === id);
-        const newCategory = task.category === category ? 0 : category
+        const newCategory = task.category === category ? '' : category
 
         const updatedTasks = tasks.map(task => task.id === id ? { ...task, category: newCategory} : task)
         setTasks(updatedTasks)
@@ -63,7 +63,8 @@ function DropdownCategories({tasks, task, setTasks}){
     }
 
     return(
-        <div>
+        task.category && 
+        <>
         <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2 text-surface-a30 ${task.done ? '' : 'hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
         {!task.done && 
         <div ref={dropdownRef}
@@ -89,7 +90,7 @@ function DropdownCategories({tasks, task, setTasks}){
             </ul>
         </div>
         }
-        </div>
+        </>
     )
 }
 
