@@ -9,7 +9,7 @@ function Home() {
 
     const [hoveredPriority, setHoveredPriority] = useState({});
 
-    const [dropdownOpen, setDropdownOpen] = useState({})
+    const [dropdownOpen, setDropdownOpen] = useState(null)
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null);
     
@@ -33,7 +33,7 @@ function Home() {
                 !event.target.closest(".dropdown") &&
                 !event.target.closest(".dropdown-button")
             ) {
-                setDropdownOpen({});
+                setDropdownOpen(null);
             }
         }
 
@@ -85,10 +85,7 @@ function Home() {
     }
 
     const toggleDropdown = (id) => {
-        setDropdownOpen(prev => ({
-            ...prev,
-            [id]: !prev[id]
-        }));
+        setDropdownOpen(prev => prev === id ? null : id);
     };
 
 
@@ -114,8 +111,8 @@ function Home() {
                         <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2 text-surface-a30 ${task.done ? '' : 'hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
                         {!task.done && 
                         <div ref={dropdownRef}
-                        className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-primary-a0 transition ${ dropdownOpen[task.id] ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
-                        >
+                        className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownOpen === task.id ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
+                            >
                             <ul className="text-surface-a50 select-none">
                             {categories.map((item, index) =>
                                 <li key={index} onClick={() => handleCategory(task.id, item)} className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${task.category === item ? 'bg-primary-a0 text-white' : 'bg-surface-a20 '}`}>
