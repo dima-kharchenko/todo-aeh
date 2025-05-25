@@ -11,7 +11,7 @@ const toLocalDatetimeString = (date) => {
     return `${yyyy}-${mm}-${dd}T${hh}:${min}`
 }
 
-function Deadline({ task, tasks, setTasks }) {
+function Deadline({ task, updateTaskLocally }) {
     const [editing, setEditing] = useState(false)
     const [inputValue, setInputValue] = useState(() => task.deadline ? toLocalDatetimeString(new Date(task.deadline)) : "")
 
@@ -34,14 +34,8 @@ function Deadline({ task, tasks, setTasks }) {
           });
 
     const handleSave = async () => {
-        const updatedTasks = tasks.map((t) =>
-            t.id === task.id
-            ? { ...t, deadline: inputValue ? new Date(inputValue).toISOString() : null }
-            : t
-        )
-        setTasks(updatedTasks);
-        const updatedTask = updatedTasks.find((t) => t.id === task.id)
-        await updateTask(updatedTask)
+        const newDeadline = inputValue ? new Date(inputValue).toISOString() : null
+        updateTaskLocally(task.id, {deadline: newDeadline })
         setEditing(false)
     }
 

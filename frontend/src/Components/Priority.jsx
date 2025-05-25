@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { updateTask } from "../api";
 
-function Priority({ tasks, task, setTasks }) {
+function Priority({ task, updateTaskLocally }) {
     const [hoveredPriority, setHoveredPriority] = useState({});
 
-    const handlePriority = async (id, priority) => {
-        const task = tasks.find(t => t.id === id)
+    const handlePriority = async (priority) => {
         const newPriority = task.priority === priority ? 0 : priority
 
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, priority: newPriority } : task)
-        setTasks(updatedTasks)
+        updateTaskLocally(task.id, {priority: newPriority})
 
-        const updatedTask = updatedTasks.find(t => t.id === id)
-        await updateTask(updatedTask)
     }
 
     return (
@@ -35,7 +30,7 @@ function Priority({ tasks, task, setTasks }) {
                     return updated
                   })
                 }
-                onClick={!task.done ? () => handlePriority(task.id, priority) : null}
+                onClick={!task.done ? () => handlePriority(priority) : null}
                 className={`w-3 h-3 rounded-sm transition ${
                   active && !task.done ? "bg-primary-a30 cursor-pointer" : "bg-surface-a20"
                 }`}

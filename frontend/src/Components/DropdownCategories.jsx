@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react"
-import { updateTask } from "../api"
 
-function DropdownCategories({tasks, task, setTasks, dropdownId, setDropdownId, categories, setCategories}){
+function DropdownCategories({tasks, task, dropdownId, setDropdownId, categories, setCategories, updateTaskLocally}){
     const [newCategory, setNewCategory] = useState('')
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null);
@@ -29,23 +28,14 @@ function DropdownCategories({tasks, task, setTasks, dropdownId, setDropdownId, c
     const handleCategory = async (id, category) => {
         const task = tasks.find(t => t.id === id);
         const newCategory = task.category === category ? '' : category
-
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, category: newCategory} : task)
-        setTasks(updatedTasks)
-
-        const updatedTask = updatedTasks.find(t => t.id === id)
-        await updateTask(updatedTask)
+        updateTaskLocally(id, {category: newCategory})
     } 
 
     const handleAddCategory = async (e, id) => {
         e.preventDefault()
         setCategories(p => ([...p, newCategory]))
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, category: newCategory} : task)
+        updateTaskLocally(id, {category: newCategory})
         setNewCategory('')
-        setTasks(updatedTasks)
-
-        const updatedTask = updatedTasks.find(t => t.id === id)
-        await updateTask(updatedTask)
     }
 
     const toggleDropdown = (id) => {

@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { getTasks, updateTask } from "../api";
 import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
 import DropdownCategories from "../Components/DropdownCategories";
 import Priority from "../Components/Priority";
 import Deadline from "../Components/Deadline";
-import { getTasks, updateTask } from "../api";
 import TaskBody from "../Components/TaskBody";
 import DropdownFilter from "../Components/DropdownFilter";
 
 function Home() {
     const [tasks, setTasks] = useState([])
-    const [dropdownId, setDropdownId] = useState(null);
+    const [filteredTasks, setFilteredTasks] = useState([])
+    const [activeCategory, setActiveCategory] = useState('')
+    const [dropdownId, setDropdownId] = useState(null)
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
@@ -19,18 +21,31 @@ function Home() {
                 let data = await getTasks()
                 data = data.filter(task => !task.done).sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
                 setTasks(data)
+                setFilteredTasks(data)
             } catch(err) {
                 console.log(err)
             }
         })()
     }, [])
     
-    const handleCheckbox = async (id) => {
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, done: !task.done } : task).sort((a, b) => b.id - a.id)
+    const updateTaskLocally = async (id, update) => {
+        const updatedTasks = tasks.map(task => task.id === id ? { ...task, ...update} : task).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
 
-        const updatedTask = updatedTasks.find(task => task.id === id)
-        await updateTask(updatedTask)
+        if (activeCategory) {
+            console.log("with cat")
+            setFilteredTasks(updatedTasks.filter(task => task.category === activeCategory))
+        } else {
+            console.log("without cat")
+            setFilteredTasks(updatedTasks)
+        }
+
+        await updateTask(updatedTasks.find(task => task.id === id))
+    }
+
+    const handleCheckbox = async (id) => {
+        const task = tasks.find(task => task.id === id)
+        updateTaskLocally(id, {done: !task.done})
     }
 
     return(
@@ -38,18 +53,22 @@ function Home() {
     <Header />
     <div className="mt-12 text-white">
         <div className="pt-8 w-1/2 mx-auto text-center">
-            <NewTask setTasks={setTasks}/>
+            <NewTask setTasks={setTasks} updateTaskLocally={updateTaskLocally} setFilteredTasks={setFilteredTasks}/>
             <div className="flex mt-2 px-4">
                 <DropdownFilter 
                     tasks={tasks} 
                     setTasks={setTasks} 
+                    setFilteredTasks={setFilteredTasks}
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
                     categories={categories} 
+                    activeCategory={activeCategory}
+                    setActiveCategory={setActiveCategory}
+                    updateTaskLocally={updateTaskLocally}
                 />
             </div>
             <div className="mt-8 space-y-2">
-            {tasks.map((task, index) => 
+            {filteredTasks.map((task, index) => 
                 <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={index}>
                     <form className="w-4 h-4 mr-2">
                         <input 
@@ -62,11 +81,11 @@ function Home() {
                     <DropdownCategories 
                         tasks={tasks} 
                         task={task} 
-                        setTasks={setTasks} 
                         dropdownId={dropdownId} 
                         setDropdownId={setDropdownId} 
                         categories={categories} 
                         setCategories={setCategories}
+                        updateTaskLocally={updateTaskLocally}
                     /> 
                     <TaskBody 
                         tasks={tasks} 
@@ -74,8 +93,8 @@ function Home() {
                         setTasks={setTasks} 
                     />
                     <div className="flex ml-auto gap-4">
-                        <Deadline tasks={tasks} task={task} setTasks={setTasks}/>
-                        <Priority tasks={tasks} task={task} setTasks={setTasks}/>
+                        <Deadline task={task} updateTaskLocally={updateTaskLocally}/>
+                        <Priority task={task} updateTaskLocally={updateTaskLocally}/>
                     </div>
                 </div>
             )}
