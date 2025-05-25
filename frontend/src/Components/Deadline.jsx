@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { updateTask } from "../api";
 
-function toLocalDatetimeString(date) {
+const toLocalDatetimeString = (date) => {
     const pad = (n) => String(n).padStart(2, '0');
     const yyyy = date.getFullYear();
     const mm = pad(date.getMonth() + 1);
@@ -59,7 +59,7 @@ function Deadline({ task, tasks, setTasks }) {
                 ) : (
                     <input
                         type="datetime-local"
-                        className="inline-block w-37 text-sm rounded-md bg-surface-a10 text-surface-a50 focus:outline-none"
+                        className="inline-block w-37 text-sm rounded-md bg-surface-a10 text-surface-a50 focus:outline-none cursor-pointer"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onBlur={handleSave}

@@ -5,6 +5,7 @@ import DropdownCategories from "../Components/DropdownCategories";
 import Priority from "../Components/Priority";
 import Deadline from "../Components/Deadline";
 import { getTasks, updateTask } from "../api";
+import TaskBody from "../Components/TaskBody";
 
 function Home() {
     const [tasks, setTasks] = useState([])
@@ -57,7 +58,11 @@ function Home() {
                         categories={categories} 
                         setCategories={setCategories}
                     /> 
-                    <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
+                    <TaskBody 
+                        tasks={tasks} 
+                        task={task} 
+                        setTasks={setTasks} 
+                    />
                     <div className="flex ml-auto gap-4">
                         <Deadline tasks={tasks} task={task} setTasks={setTasks}/>
                         <Priority tasks={tasks} task={task} setTasks={setTasks}/>
