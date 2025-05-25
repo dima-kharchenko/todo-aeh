@@ -48,7 +48,7 @@ function Deadline({ task, tasks, setTasks }) {
             <div className="relative">
                 {!editing ? (
                     <p
-                        className={`inline-block w-38 text-sm my-auto rounded-md transition 
+                        className={`inline-block text-sm my-auto rounded-md transition 
                         ${task.done ? "text-surface-a30" : "text-surface-a40 hover:text-primary-a0 cursor-pointer"}`}
                         onClick={() => {
                             if (!task.done) setEditing(true);
@@ -59,7 +59,7 @@ function Deadline({ task, tasks, setTasks }) {
                 ) : (
                     <input
                         type="datetime-local"
-                        className="inline-block w-38 text-sm rounded-md bg-surface-a10 text-surface-a50 focus:outline-none"
+                        className="inline-block w-37 text-sm rounded-md bg-surface-a10 text-surface-a50 focus:outline-none"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onBlur={handleSave}
