@@ -6,6 +6,7 @@ import Priority from "../Components/Priority";
 import Deadline from "../Components/Deadline";
 import { getTasks, updateTask } from "../api";
 import TaskBody from "../Components/TaskBody";
+import DropdownFilter from "../Components/DropdownFilter";
 
 function Home() {
     const [tasks, setTasks] = useState([])
@@ -38,6 +39,15 @@ function Home() {
     <div className="mt-12 text-white">
         <div className="pt-8 w-1/2 mx-auto text-center">
             <NewTask setTasks={setTasks}/>
+            <div className="flex mt-2 px-4">
+                <DropdownFilter 
+                    tasks={tasks} 
+                    setTasks={setTasks} 
+                    dropdownId={dropdownId} 
+                    setDropdownId={setDropdownId} 
+                    categories={categories} 
+                />
+            </div>
             <div className="mt-8 space-y-2">
             {tasks.map((task, index) => 
                 <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={index}>

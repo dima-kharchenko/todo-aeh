@@ -33,6 +33,7 @@ function TaskBody ({tasks, task, setTasks}) {
                 value={task.body}
                 onChange={(e) => handleBodyChange(e)}
                 onBlur={(e) => handleBodySubmit(e)}
+                disabled={task.done}
             />
         </form>
     )
