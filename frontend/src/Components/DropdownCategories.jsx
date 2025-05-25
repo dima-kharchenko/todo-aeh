@@ -61,9 +61,8 @@ function DropdownCategories({tasks, task, setTasks, dropdownId, setDropdownId, c
     }
 
     return(
-        task.category && 
-        <div>
-        <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2  ${task.done ? 'text-surface-a30' : 'text-surface-a40 hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category}</button>
+        <>
+        <button ref={buttonRef} onClick={() => toggleDropdown(task.id)} className={`dropdown-button mr-2  ${task.done ? 'text-surface-a30' : 'text-surface-a40 hover:text-primary-a0 cursor-pointer'} focus:outline-none transition`}>{task.category ? task.category : '#'}</button>
         {!task.done && 
         <div ref={dropdownRef}
         className={`dropdown mt-3 absolute -translate-x-4.5 rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownId === task.id ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
@@ -88,7 +87,7 @@ function DropdownCategories({tasks, task, setTasks, dropdownId, setDropdownId, c
             </ul>
         </div>
         }
-        </div>
+        </>
     )
 }
 
