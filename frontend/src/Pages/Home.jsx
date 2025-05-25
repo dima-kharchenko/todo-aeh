@@ -87,11 +87,7 @@ function Home() {
                         setCategories={setCategories}
                         updateTaskLocally={updateTaskLocally}
                     /> 
-                    <TaskBody 
-                        tasks={tasks} 
-                        task={task} 
-                        setTasks={setTasks} 
-                    />
+                    <TaskBody tasks={tasks} task={task} setTasks={setTasks} setFilteredTasks={setFilteredTasks} /> 
                     <div className="flex ml-auto gap-4">
                         <Deadline task={task} updateTaskLocally={updateTaskLocally}/>
                         <Priority task={task} updateTaskLocally={updateTaskLocally}/>
