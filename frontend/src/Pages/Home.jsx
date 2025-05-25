@@ -3,6 +3,7 @@ import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
 import DropdownCategories from "../Components/DropdownCategories";
 import Priority from "../Components/Priority";
+import Deadline from "../Components/Deadline";
 import { getTasks, updateTask } from "../api";
 
 function Home() {
@@ -58,28 +59,7 @@ function Home() {
                     /> 
                     <p className={`${task.done ? 'text-surface-a30' : ''} transition`}>{task.body}</p>
                     <div className="flex ml-auto gap-4">
-                        {task.deadline && (() => {
-                            const deadline = new Date(task.deadline);
-                            const now = new Date();
-                            const isToday =
-                                deadline.getDate() === now.getDate() &&
-                                deadline.getMonth() === now.getMonth() &&
-                                deadline.getFullYear() === now.getFullYear();
-                            return (
-                            <p className={`text-sm my-auto ${task.done ? 'text-surface-a30' : 'text-surface-a40'} transition`}>
-                                {isToday ? 
-                                new Date(task.deadline).toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" })
-                                : 
-                                new Date(task.deadline).toLocaleString("pl-PL", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
-                            </p>
-                        )
-                        })()}
+                        <Deadline tasks={tasks} task={task} setTasks={setTasks}/>
                         <Priority tasks={tasks} task={task} setTasks={setTasks}/>
                     </div>
                 </div>
