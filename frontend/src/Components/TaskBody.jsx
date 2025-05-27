@@ -6,7 +6,7 @@ function TaskBody ({tasks, task, setTasks, setFilteredTasks}) {
     const [submitted, setSubmitted] = useState(false)
 
     const handleBodyChange = async (e) => {
-        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, body: e.target.value } : t).sort((a, b) => b.id - a.id)
+        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, body: e.target.value } : t).sort((a, b) => b.id - a.id).filter(t => !t.done)
         setTasks(updatedTasks)
         setFilteredTasks(updatedTasks)
         setSubmitted(false)
@@ -30,6 +30,7 @@ function TaskBody ({tasks, task, setTasks, setFilteredTasks}) {
             <input
                 ref={inputRef}
                 type="text"
+                name={`body-${task.id}`}
                 className={`${task.done ? 'text-surface-a30' : ''} focus:outline-none transition`}
                 value={task.body}
                 onChange={(e) => handleBodyChange(e)}

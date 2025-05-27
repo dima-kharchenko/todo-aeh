@@ -58,7 +58,8 @@ function DropdownCategories({tasks, task, dropdownId, setDropdownId, categories,
                     <form onSubmit={(e) => handleAddCategory(e)}>
                         <input
                             placeholder="Add"
-                            className="mb-2 px-2 py-1 w-full rounded-lg text-center focus:outline-none field-sizing-content bg-surface-a20 placeholder:text-surface-a50 text-sm focus:placeholder:text-transparent transition"
+                            name="add-category"
+                            className={`mb-2 px-2 py-1 ${categories.length > 0 ? '' : 'mt-2'} w-full rounded-lg text-center focus:outline-none field-sizing-content bg-surface-a20 placeholder:text-surface-a50 text-sm focus:placeholder:text-transparent transition`}
                             type="text"
                             value={newCategory}
                             onChange={(e) => setNewCategory(e.target.value)}

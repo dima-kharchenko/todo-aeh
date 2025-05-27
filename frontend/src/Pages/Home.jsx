@@ -12,6 +12,7 @@ function Home() {
     const [tasks, setTasks] = useState([])
     const [filteredTasks, setFilteredTasks] = useState([])
     const [activeCategory, setActiveCategory] = useState('')
+    const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
     const [categories, setCategories] = useState([])
 
@@ -19,9 +20,9 @@ function Home() {
         (async () => {
             try {
                 let data = await getTasks()
-                data = data.filter(task => !task.done).sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
+                data = data.sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
                 setTasks(data)
-                setFilteredTasks(data)
+                setFilteredTasks(data.filter(task => !task.done))
             } catch(err) {
                 console.log(err)
             }
@@ -29,14 +30,12 @@ function Home() {
     }, [])
     
     const updateTaskLocally = async (id, update) => {
-        const updatedTasks = tasks.map(task => task.id === id ? { ...task, ...update} : task).sort((a, b) => b.id - a.id)
+        const updatedTasks = tasks.filter(t => !t.done).map(task => task.id === id ? { ...task, ...update} : task).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
 
         if (activeCategory) {
-            console.log("with cat")
             setFilteredTasks(updatedTasks.filter(task => task.category === activeCategory))
         } else {
-            console.log("without cat")
             setFilteredTasks(updatedTasks)
         }
 
@@ -58,12 +57,15 @@ function Home() {
                 <DropdownFilter 
                     tasks={tasks} 
                     setTasks={setTasks} 
+                    filteredTasks={filteredTasks} 
                     setFilteredTasks={setFilteredTasks}
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
                     categories={categories} 
                     activeCategory={activeCategory}
                     setActiveCategory={setActiveCategory}
+                    showDone={showDone}
+                    setShowDone={setShowDone}
                     updateTaskLocally={updateTaskLocally}
                 />
             </div>
@@ -73,6 +75,7 @@ function Home() {
                     <form className="w-4 h-4 mr-2">
                         <input 
                             type="checkbox"
+                            name={`checkbox-${task.id}`}
                             checked={task.done} 
                             onChange={() => handleCheckbox(task.id)}
                             className="w-full h-full my-1 cursor-pointer focus:outline-none appearance-none bg-surface-a20 rounded-sm hover:ring-2 ring-primary-a0 checked:bg-primary-a0 transition"
