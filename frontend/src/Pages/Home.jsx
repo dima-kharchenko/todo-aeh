@@ -28,22 +28,34 @@ function Home() {
             }
         })()
     }, [])
+
+    useEffect(() => {
+        const newFiltered = tasks.filter(task => {
+            const matchesCategory = activeCategory ? task.category === activeCategory : true
+            const matchesDone = showDone || !task.done
+            return matchesCategory && matchesDone
+        })
+        setFilteredTasks(newFiltered)
+    }, [activeCategory, showDone])
     
     const updateTaskLocally = async (id, update) => {
-        const updatedTasks = tasks.filter(t => !t.done).map(task => task.id === id ? { ...task, ...update} : task).sort((a, b) => b.id - a.id)
+        const updatedTasks = tasks.map(task =>
+            task.id === id ? { ...task, ...update } : task
+        ).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
 
-        if (activeCategory) {
-            setFilteredTasks(updatedTasks.filter(task => task.category === activeCategory))
-        } else {
-            setFilteredTasks(updatedTasks)
-        }
+        const updatedFilteredTasks = filteredTasks.map(task =>
+            task.id === id ? { ...task, ...update } : task
+        )
+        setFilteredTasks(updatedFilteredTasks)
 
-        await updateTask(updatedTasks.find(task => task.id === id))
+        const updatedTask = updatedTasks.find(task => task.id === id)
+        await updateTask(updatedTask)
     }
 
     const handleCheckbox = async (id) => {
         const task = tasks.find(task => task.id === id)
+        
         updateTaskLocally(id, {done: !task.done})
     }
 
@@ -52,7 +64,12 @@ function Home() {
     <Header />
     <div className="mt-12 text-white">
         <div className="pt-8 w-1/2 mx-auto text-center">
-            <NewTask setTasks={setTasks} updateTaskLocally={updateTaskLocally} setFilteredTasks={setFilteredTasks}/>
+            <NewTask 
+                setTasks={setTasks} 
+                setFilteredTasks={setFilteredTasks}
+                activeCategory={activeCategory}
+                showDone={showDone}
+            />
             <div className="flex mt-2 px-4">
                 <DropdownFilter 
                     tasks={tasks} 
