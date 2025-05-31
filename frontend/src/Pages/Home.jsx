@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTasks, updateTask } from "../api";
+import { getTasks, updateTask, deleteTask } from "../api";
 import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
 import DropdownCategories from "../Components/DropdownCategories";
@@ -15,6 +15,7 @@ function Home() {
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
     const [categories, setCategories] = useState([])
+    const [deleteMode, setDeleteMode] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -59,6 +60,15 @@ function Home() {
         updateTaskLocally(id, {done: !task.done})
     }
 
+    const handleDelete = async (id) => {
+        await deleteTask(id)
+        const updatedTasks = tasks.filter(t => t.id !== id)
+        setTasks(updatedTasks)
+
+        const updatedFilteredTasks = filteredTasks.filter(t => t.id !== id)
+        setFilteredTasks(updatedFilteredTasks)
+    }
+
     return(
     <>
     <Header />
@@ -85,6 +95,12 @@ function Home() {
                     setShowDone={setShowDone}
                     updateTaskLocally={updateTaskLocally}
                 />
+                <button
+                className={`ml-2 py-1 px-2 rounded-lg cursor-pointer ${deleteMode ? 'bg-primary-a0' : 'text-surface-a30 hover:text-primary-a0'} transition`}
+                onClick={() => setDeleteMode(p => !p)}
+                >
+                Delete
+                </button>
             </div>
             <div className="mt-8 space-y-2">
             {filteredTasks.map((task, index) => 
@@ -108,11 +124,20 @@ function Home() {
                         updateTaskLocally={updateTaskLocally}
                     /> 
                     <TaskBody tasks={tasks} task={task} setTasks={setTasks} setFilteredTasks={setFilteredTasks} /> 
-                    <div className="flex ml-auto gap-4">
-                        <Deadline task={task} updateTaskLocally={updateTaskLocally}/>
-                        <Priority task={task} updateTaskLocally={updateTaskLocally}/>
-                    </div>
+                    <div className="relative ml-auto flex items-center">
+                        <div className={`${deleteMode ? 'opacity-0 pointer-events-none' : 'opacity-100'} flex gap-4 transition-opacity`}>
+                            <Deadline task={task} updateTaskLocally={updateTaskLocally}/>
+                            <Priority task={task} updateTaskLocally={updateTaskLocally}/>
+                        </div>
+                        <button
+                            className={`${deleteMode ? 'opacity-100' : 'opacity-0 pointer-events-none'} text-sm focus:outline-none pr-1 absolute right-0 cursor-pointer hover:text-red-500 transition`}
+                            onClick={() => handleDelete(task.id)}
+                        >
+                            <i className="fa-solid fa-trash"></i> 
+                        </button>
+                    </div>                
                 </div>
+
             )}
             </div>
         </div>
