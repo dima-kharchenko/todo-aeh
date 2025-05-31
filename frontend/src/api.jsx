@@ -11,7 +11,7 @@ export const signup = async (username, password) => {
         username: username,
         password: password,
     })
-    
+
     return response.data
 }
 
@@ -28,7 +28,7 @@ export const logout = async () => {
     try {
         const response = await api.get("user/logout/");
         return response.data
-    } catch(err) {
+    } catch (err) {
         console.error(err)
         return null
     }
@@ -49,8 +49,13 @@ export const updateTask = async (task) => {
     return response.data
 }
 
+export const deleteTask = async (id) => {
+    const response = await api.delete("task/delete/", { data: { id: id } })
+    return response.data
+}
+
 export const getTasks = async () => {
-    const response = await api.get("tasks/", {params: {}})
+    const response = await api.get("tasks/", { params: {} })
     return response.data
 }
 

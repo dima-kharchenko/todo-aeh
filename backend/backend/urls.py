@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView, CustomTokenObtainPairView, GetTasksView, LogoutView, IsAuthenticatedView, CreateTaskView, UpdateTaskView
+from api.views import CreateUserView, CustomTokenObtainPairView, DeleteTaskView, GetTasksView, LogoutView, IsAuthenticatedView, CreateTaskView, UpdateTaskView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api/task/create/", CreateTaskView.as_view(), name="create_task"),
     path("api/task/update/", UpdateTaskView.as_view(), name="update_task"),
+    path("api/task/delete/", DeleteTaskView.as_view(), name="delete_task"),
     path("api/tasks/", GetTasksView.as_view(), name="get_tasks"),
     path("api-auth/", include("rest_framework.urls")),
 ]

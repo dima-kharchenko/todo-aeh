@@ -114,6 +114,19 @@ class UpdateTaskView(APIView):
 
         return Response({"updated": count})
 
+class DeleteTaskView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request):
+        try: 
+            user = request.user
+            id = request.data.get("id")
+            Task.objects.filter(user=user, id=id).delete()
+
+            return Response({"success": True})
+        except:
+            return Response({"success": False})
+
 class GetTasksView(APIView):
     permission_classes = [IsAuthenticated]
 
