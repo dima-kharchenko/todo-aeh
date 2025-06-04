@@ -43,7 +43,8 @@ function Deadline({ task, updateTaskLocally }) {
             {!editing ? (
                 <p
                     className={`inline-block text-sm my-auto rounded-md transition 
-                    ${task.done ? "text-surface-a30" : "text-surface-a40 hover:text-primary-a0 cursor-pointer"}`}
+                    ${new Date(task.deadline) < new Date ? "text-red-400" : "text-surface-a40"} 
+                    ${task.done ? "text-surface-a30 " : "hover:text-primary-a0 cursor-pointer"}`}
                     onClick={() => {if (!task.done) setEditing(true)}}
                 >
                     {task.deadline ? formatted : <i className="fa-regular fa-clock"></i>}
