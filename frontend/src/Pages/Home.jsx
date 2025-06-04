@@ -7,11 +7,13 @@ import Priority from "../Components/Priority";
 import Deadline from "../Components/Deadline";
 import TaskBody from "../Components/TaskBody";
 import DropdownFilter from "../Components/DropdownFilter";
+import DropdownSort from "../Components/DropdownSort";
 
 function Home() {
     const [tasks, setTasks] = useState([])
     const [filteredTasks, setFilteredTasks] = useState([])
     const [activeCategory, setActiveCategory] = useState('')
+    const [activeSort, setActiveSort] = useState('')
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
     const [categories, setCategories] = useState([])
@@ -80,7 +82,7 @@ function Home() {
                 activeCategory={activeCategory}
                 showDone={showDone}
             />
-            <div className="flex mt-2 px-4">
+            <div className="flex mt-2 px-4 gap-2">
                 <DropdownFilter 
                     tasks={tasks} 
                     setTasks={setTasks} 
@@ -95,8 +97,15 @@ function Home() {
                     setShowDone={setShowDone}
                     updateTaskLocally={updateTaskLocally}
                 />
+                <DropdownSort 
+                    setFilteredTasks={setFilteredTasks}
+                    dropdownId={dropdownId} 
+                    setDropdownId={setDropdownId} 
+                    activeSort={activeSort}
+                    setActiveSort={setActiveSort}
+                />
                 <button
-                className={`ml-2 py-1 px-2 rounded-lg cursor-pointer ${deleteMode ? 'bg-primary-a0' : 'text-surface-a30 hover:text-primary-a0'} transition`}
+                className={`py-1 px-2 rounded-lg cursor-pointer ${deleteMode ? 'bg-primary-a0' : 'text-surface-a30 hover:text-primary-a0'} transition`}
                 onClick={() => setDeleteMode(p => !p)}
                 >
                 Delete
