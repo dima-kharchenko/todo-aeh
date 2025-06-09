@@ -1,10 +1,10 @@
 FROM node:20
 
 WORKDIR /app
+COPY frontend/package*.json ./
 
-COPY frontend/package.json ./
 RUN npm install
 
-COPY frontend /app
+COPY frontend . 
 
 CMD ["npm", "run", "dev"]
