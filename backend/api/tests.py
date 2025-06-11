@@ -1,10 +1,12 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 from http.cookies import SimpleCookie
 from rest_framework import status
 from django.urls import reverse
+from rest_framework_simplejwt.tokens import RefreshToken
+from api.models import Task
 
 
 class RegistrationTests(APITestCase):
@@ -125,3 +127,94 @@ class LoginTests(APITestCase):
             "username": "testuser"  
         }, format="json")
         self.assertEqual(response.status_code, 400)
+
+
+class CreateTaskTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.url = reverse('create_task')
+        self.task_data = {
+            "body": "test task body"
+        }
+
+        refresh = RefreshToken.for_user(self.user)
+        access_token = str(refresh.access_token)
+        self.client.cookies['access_token'] = access_token
+
+    def test_create_task(self):
+        response = self.client.post(self.url, self.task_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(Task.objects.count(), 1)
+        task = Task.objects.first()
+        self.assertEqual(task.body, self.task_data["body"])
+        self.assertEqual(task.user, self.user)
+
+
+class UpdateTaskTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.url = reverse('update_task')
+
+        self.existing_task = Task.objects.create(
+            user=self.user,
+            body="test task body",
+            done=False,
+            category="",
+            deadline=None,
+            priority=0
+        )
+
+        self.task_data = {
+            "id": self.existing_task.id,
+            "body": "update task body",
+            "done": True,
+            "category": "test",
+            "deadline": None,
+            "priority": 2,
+        }
+
+        refresh = RefreshToken.for_user(self.user)
+        access_token = str(refresh.access_token)
+        self.client.cookies['access_token'] = access_token
+
+    def test_update_task(self):
+        response = self.client.put(self.url, self.task_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(Task.objects.count(), 1)
+        task = Task.objects.first()
+        self.assertEqual(task.body, self.task_data["body"])
+        self.assertEqual(task.done, self.task_data["done"])
+        self.assertEqual(task.category, self.task_data["category"])
+        self.assertEqual(task.priority, self.task_data["priority"])
+        self.assertEqual(task.user, self.user)
+
+
+class DeleteTaskTest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.url = reverse('delete_task')
+
+        self.existing_task = Task.objects.create(
+            user=self.user,
+            body="test task body",
+            done=False,
+            category="",
+            deadline=None,
+            priority=0
+        )
+
+        self.task_data = {
+            "id": self.existing_task.id,
+        }
+
+        refresh = RefreshToken.for_user(self.user)
+        access_token = str(refresh.access_token)
+        self.client.cookies['access_token'] = access_token
+
+    def test_delete_task(self):
+        response = self.client.delete(self.url, self.task_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(Task.objects.count(), 0)
