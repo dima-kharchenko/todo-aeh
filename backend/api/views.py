@@ -31,7 +31,7 @@ class CreateUserView(generics.CreateAPIView):
                 value=access_token,
                 path="/",
                 expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-                secure=True,
+                secure=False,
                 httponly=True,
                 samesite="Lax",
                 )
@@ -40,7 +40,7 @@ class CreateUserView(generics.CreateAPIView):
                 value=refresh_token,
                 path="/",
                 expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-                secure=True,
+                secure=False,
                 httponly=True,
                 samesite="Lax",
                 )
@@ -58,7 +58,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 value=access_token,
                 path="/",
                 expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-                secure=True,
+                secure=False,
                 httponly=True,
                 samesite="Lax",
                 )
@@ -67,7 +67,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 value=refresh_token,
                 path="/",
                 expires=settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"],
-                secure=True,
+                secure=False,
                 httponly=True,
                 samesite="Lax",
                 )
