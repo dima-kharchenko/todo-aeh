@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-b)pxj^nr)x8jdpc8-y1mt#j^b8&w8)22d#=d%!-r*+d53jx$-g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'raspi.local']
 
 
 REST_FRAMEWORK = {
@@ -84,6 +84,7 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "http://raspi.local:5173",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -162,5 +163,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://raspi.local:5173",
 ]
 
