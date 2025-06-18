@@ -9,6 +9,7 @@ services:
       - "8001:8000"
     depends_on:
       - frontend
+    restart: unless-stopped
 
   frontend:
     build:
@@ -19,4 +20,5 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
+    restart: unless-stopped
 
