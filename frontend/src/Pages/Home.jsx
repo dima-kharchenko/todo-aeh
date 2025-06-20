@@ -71,6 +71,13 @@ function Home() {
         setFilteredTasks(updatedFilteredTasks)
     }
 
+    const resetFilters = async () => {
+        setActiveCategory('')
+        setActiveSort('')
+        setShowDone(false)
+        setDeleteMode(false)
+    }
+
     return(
     <>
     <Header />
@@ -109,6 +116,11 @@ function Home() {
                 onClick={() => setDeleteMode(p => !p)}
                 >
                 Delete
+                </button>
+                <button
+                onClick={() => resetFilters()}
+                >
+                <div class={`w-3 h-3 rounded-sm cursor-pointer transition ${activeSort || activeCategory || showDone || deleteMode ? 'bg-primary-a0' : 'bg-surface-a20'}`}></div>
                 </button>
             </div>
             <div className="mt-8 space-y-2">
