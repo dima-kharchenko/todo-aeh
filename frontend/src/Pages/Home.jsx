@@ -120,7 +120,7 @@ function Home() {
                 <button
                 onClick={() => resetFilters()}
                 >
-                <div class={`w-3 h-3 rounded-sm cursor-pointer transition ${activeSort || activeCategory || showDone || deleteMode ? 'bg-primary-a0' : 'bg-surface-a20'}`}></div>
+                <div className={`w-3 h-3 rounded-sm cursor-pointer bg-primary-a0 transition-opacity ${activeSort || activeCategory || showDone || deleteMode ? '' : 'opacity-0 scale-0'}`}></div>
                 </button>
             </div>
             <div className="mt-8 space-y-2">
