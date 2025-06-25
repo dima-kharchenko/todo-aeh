@@ -28,7 +28,10 @@ function DropdownSort({ filteredTasks, setFilteredTasks, dropdownId, setDropdown
                 setFilteredTasks(activeTasks.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)}).concat(doneTasks))
                 break
             case 'priority':
-                setFilteredTasks(activeTasks.sort((a, b) => {return new Date(b[sort]) - new Date(a[sort])}).concat(doneTasks))
+                setFilteredTasks(activeTasks.sort((a, b) => b.priority - a.priority).concat(doneTasks))
+                break
+            case 'category':
+                setFilteredTasks(activeTasks.sort((a, b) => a.category.localeCompare(b.category)).concat(doneTasks))
                 break
             default:
                 setFilteredTasks(activeTasks.sort((a, b) => b.id - a.id).concat(doneTasks))
@@ -58,7 +61,7 @@ function DropdownSort({ filteredTasks, setFilteredTasks, dropdownId, setDropdown
                 className={`dropdown mt-8 translate-x-5.5 absolute rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownId === -2 ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
             >
                 <ul className="text-surface-a50 select-none">
-                    {['Priority', 'Deadline'].map((item, index) =>
+                    {['Priority', 'Deadline', 'Category'].map((item, index) =>
                         <li key={index}
                             onClick={() => handleSort(item.toLowerCase())}
                             className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${activeSort === item.toLowerCase() ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
