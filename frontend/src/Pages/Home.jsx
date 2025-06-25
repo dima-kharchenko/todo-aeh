@@ -105,6 +105,7 @@ function Home() {
                     updateTaskLocally={updateTaskLocally}
                 />
                 <DropdownSort 
+                    filteredTasks={filteredTasks}
                     setFilteredTasks={setFilteredTasks}
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
