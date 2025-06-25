@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-function DropdownSort({ setFilteredTasks, dropdownId, setDropdownId, activeSort, setActiveSort }) {
+function DropdownSort({ filteredTasks, setFilteredTasks, dropdownId, setDropdownId, activeSort, setActiveSort }) {
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -21,15 +21,17 @@ function DropdownSort({ setFilteredTasks, dropdownId, setDropdownId, activeSort,
     }, [])
 
     const applySort = (sort) => {
+        const activeTasks = filteredTasks.filter(t => !t.done)
+        const doneTasks = filteredTasks.filter(t => t.done)
         switch(sort) {
             case 'deadline':
-                setFilteredTasks(p => (p.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)})))
+                setFilteredTasks(activeTasks.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)}).concat(doneTasks))
                 break
             case 'priority':
-                setFilteredTasks(p => (p.sort((a, b) => {return new Date(b[sort]) - new Date(a[sort])})))
+                setFilteredTasks(activeTasks.sort((a, b) => {return new Date(b[sort]) - new Date(a[sort])}).concat(doneTasks))
                 break
             default:
-                setFilteredTasks(p => (p.sort((a, b) => b.id - a.id)))
+                setFilteredTasks(activeTasks.sort((a, b) => b.id - a.id).concat(doneTasks))
                 break
         }
     }
