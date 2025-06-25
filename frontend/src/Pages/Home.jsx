@@ -34,7 +34,7 @@ function Home() {
 
     useEffect(() => {
         const newFiltered = tasks.filter(task => {
-            const matchesCategories = activeCategories ? activeCategories.includes(task.category) : true
+            const matchesCategories = activeCategories.length > 0 ? activeCategories.includes(task.category) : true
             const matchesDone = showDone || !task.done
             return matchesCategories && matchesDone
         })
@@ -120,7 +120,7 @@ function Home() {
                 <button
                 onClick={() => resetFilters()}
                 >
-                <div className={`w-3 h-3 rounded-sm cursor-pointer bg-primary-a0 transition-opacity ${activeSort || activeCategories || showDone || deleteMode ? '' : 'opacity-0 scale-0'}`}></div>
+                <div className={`w-3 h-3 rounded-sm cursor-pointer bg-primary-a0 transition-opacity ${activeSort || activeCategories.length > 0 || showDone || deleteMode ? '' : 'opacity-0 scale-0'}`}></div>
                 </button>
             </div>
             <div className="mt-8 space-y-2">
