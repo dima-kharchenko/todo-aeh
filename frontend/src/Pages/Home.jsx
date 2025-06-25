@@ -12,7 +12,7 @@ import DropdownSort from "../Components/DropdownSort";
 function Home() {
     const [tasks, setTasks] = useState([])
     const [filteredTasks, setFilteredTasks] = useState([])
-    const [activeCategory, setActiveCategory] = useState('')
+    const [activeCategories, setActiveCategories] = useState([])
     const [activeSort, setActiveSort] = useState('')
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
@@ -34,12 +34,12 @@ function Home() {
 
     useEffect(() => {
         const newFiltered = tasks.filter(task => {
-            const matchesCategory = activeCategory ? task.category === activeCategory : true
+            const matchesCategories = activeCategories ? activeCategories.includes(task.category) : true
             const matchesDone = showDone || !task.done
-            return matchesCategory && matchesDone
+            return matchesCategories && matchesDone
         })
         setFilteredTasks(newFiltered)
-    }, [activeCategory, showDone])
+    }, [activeCategories, showDone])
     
     const updateTaskLocally = async (id, update) => {
         const updatedTasks = tasks.map(task =>
@@ -72,7 +72,7 @@ function Home() {
     }
 
     const resetFilters = async () => {
-        setActiveCategory('')
+        setActiveCategories([])
         setActiveSort('')
         setShowDone(false)
         setDeleteMode(false)
@@ -86,7 +86,7 @@ function Home() {
             <NewTask 
                 setTasks={setTasks} 
                 setFilteredTasks={setFilteredTasks}
-                activeCategory={activeCategory}
+                activeCategories={activeCategories}
                 showDone={showDone}
             />
             <div className="flex mt-2 px-4 gap-2">
@@ -98,8 +98,8 @@ function Home() {
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
                     categories={categories} 
-                    activeCategory={activeCategory}
-                    setActiveCategory={setActiveCategory}
+                    activeCategories={activeCategories}
+                    setActiveCategories={setActiveCategories}
                     showDone={showDone}
                     setShowDone={setShowDone}
                     updateTaskLocally={updateTaskLocally}
@@ -120,7 +120,7 @@ function Home() {
                 <button
                 onClick={() => resetFilters()}
                 >
-                <div class={`w-3 h-3 rounded-sm cursor-pointer transition ${activeSort || activeCategory || showDone || deleteMode ? 'bg-primary-a0' : 'bg-surface-a20'}`}></div>
+                <div className={`w-3 h-3 rounded-sm cursor-pointer bg-primary-a0 transition-opacity ${activeSort || activeCategories || showDone || deleteMode ? '' : 'opacity-0 scale-0'}`}></div>
                 </button>
             </div>
             <div className="mt-8 space-y-2">

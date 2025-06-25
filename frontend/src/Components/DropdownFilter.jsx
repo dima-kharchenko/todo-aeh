@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCategory, setActiveCategory, setFilteredTasks, showDone, setShowDone }) {
+function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCategories, setActiveCategories, setFilteredTasks, showDone, setShowDone }) {
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -20,25 +20,33 @@ function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCa
         }
     }, [])
 
-    const applyFilters = (category, done) => {
+    const applyFilters = (categories, done) => {
         let filtered = tasks
 
-        filtered = category ? filtered.filter(t => t.category === category) : filtered
+        filtered = categories.length > 0 ? filtered.filter(t => categories.includes(t.category)) : filtered
         filtered = !done ? filtered.filter(t => !t.done) : filtered
 
         setFilteredTasks(filtered)
     }
 
     const handleCategory = (category) => {
-        const newCategory = category !== activeCategory ? category : ''
-        setActiveCategory(newCategory)
-        applyFilters(newCategory, showDone)
+        let newCategories
+        if (!activeCategories.includes(category)) {
+            newCategories = [...activeCategories, category]
+        } else {
+            const index = activeCategories.indexOf(category)
+            newCategories = activeCategories
+            newCategories.splice(index, 1)
+        }
+
+        setActiveCategories(newCategories) 
+        applyFilters(newCategories, showDone)
     }
 
     const handleShowDone = () => {
         const newShowDone = !showDone
         setShowDone(newShowDone)
-        applyFilters(activeCategory, newShowDone)
+        applyFilters(activeCategories, newShowDone)
     } 
 
     const toggleDropdown = (id) => {
@@ -60,7 +68,7 @@ function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCa
                     {categories.map((item, index) =>
                         <li key={index}
                             onClick={() => handleCategory(item)}
-                            className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${activeCategory === item ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
+                            className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${activeCategories.includes(item) ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
                             {item}
                         </li>
                     )}
