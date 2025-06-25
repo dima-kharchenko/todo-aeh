@@ -56,7 +56,7 @@ function DropdownSort({ setFilteredTasks, dropdownId, setDropdownId, activeSort,
                 className={`dropdown mt-8 translate-x-5.5 absolute rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownId === -2 ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
             >
                 <ul className="text-surface-a50 select-none">
-                    {['Deadline', 'Priority'].map((item, index) =>
+                    {['Priority', 'Deadline'].map((item, index) =>
                         <li key={index}
                             onClick={() => handleSort(item.toLowerCase())}
                             className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${activeSort === item.toLowerCase() ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
