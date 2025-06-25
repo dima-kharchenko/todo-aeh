@@ -1,6 +1,6 @@
 import { createTask } from "../api";
 import { useState } from "react";
-function NewTask({ setTasks, setFilteredTasks, activeCategory, showDone }) {
+function NewTask({ setTasks, setFilteredTasks, showDone }) {
     const [newTask, setNewTask] = useState({body: '', category: '', done: false, deadline: null, priority: 0})
 
     const handleSubmit = async (e) => {
@@ -10,10 +10,9 @@ function NewTask({ setTasks, setFilteredTasks, activeCategory, showDone }) {
             setNewTask({body: '', category: '', done: false, deadline: null, priority: 0})
             setTasks(p => [res, ...p])
 
-            const fitsCategory = !activeCategory || res.category === activeCategory
             const fitsDone = showDone || !res.done
 
-            if (fitsCategory && fitsDone) {
+            if (fitsDone) {
                 setFilteredTasks(prev => [res, ...prev])
             }
         }
