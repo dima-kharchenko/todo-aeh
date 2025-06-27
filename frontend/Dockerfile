@@ -1,10 +1,14 @@
-FROM node:20
+FROM node:20-alpine as builder
 
 WORKDIR /app
-COPY frontend/package*.json ./
+COPY . .
 
-RUN npm install
+RUN npm install && npm run build
 
-COPY frontend . 
+FROM alpine:3.18
 
-CMD ["npm", "run", "dev"]
+RUN mkdir -p /frontend_build
+
+COPY --from=builder /app/dist /frontend_build
+VOLUME ["/frontend_build"]
+
