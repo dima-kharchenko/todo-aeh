@@ -145,7 +145,13 @@ function Home() {
                         setCategories={setCategories}
                         updateTaskLocally={updateTaskLocally}
                     /> 
-                    <TaskBody tasks={tasks} task={task} setTasks={setTasks} setFilteredTasks={setFilteredTasks} /> 
+                    <TaskBody
+                        tasks={tasks} 
+                        task={task} 
+                        setTasks={setTasks} 
+                        filteredTasks={filteredTasks}
+                        setFilteredTasks={setFilteredTasks} 
+                    /> 
                     <div className="relative ml-auto flex items-center">
                         <div className={`${deleteMode ? 'opacity-0 pointer-events-none' : 'opacity-100'} flex gap-4 transition-opacity`}>
                             <Deadline task={task} updateTaskLocally={updateTaskLocally}/>

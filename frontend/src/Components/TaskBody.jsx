@@ -1,14 +1,18 @@
 import { useRef, useState } from "react";
 import { updateTask } from "../api";
 
-function TaskBody ({tasks, task, setTasks, setFilteredTasks}) {
+function TaskBody ({tasks, task, setTasks, filteredTasks, setFilteredTasks}) {
     const inputRef = useRef(null)
     const [submitted, setSubmitted] = useState(false)
 
     const handleBodyChange = async (e) => {
-        const updatedTasks = tasks.map(t => t.id === task.id ? { ...t, body: e.target.value } : t).sort((a, b) => b.id - a.id).filter(t => !t.done)
+        const updatedTasks = tasks.map(t =>
+            t.id === task.id ? { ...t, body: e.target.value } : t
+        ).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
-        setFilteredTasks(updatedTasks)
+
+        const updatedFilteredTasks = filteredTasks.map(t => t.id === task.id ? { ...t, body: e.target.value } : t)
+        setFilteredTasks(updatedFilteredTasks)
         setSubmitted(false)
     }
 

@@ -292,4 +292,11 @@ sketch
 pyvenv.cfg
 pip-selfcheck.json
 
+# Editor backups
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+
 # End of https://www.toptal.com/developers/gitignore/api/django,python,venv,dotenv,react
