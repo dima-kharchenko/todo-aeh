@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCategories, setActiveCategories, setFilteredTasks, showDone, setShowDone }) {
+function DropdownFilter({ dropdownId, setDropdownId, categories, activeCategories, setActiveCategories, showDone, setShowDone }) {
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -20,34 +20,15 @@ function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCa
         }
     }, [])
 
-    const applyFilters = (categories, done) => {
-        let filtered = tasks
-
-        filtered = categories.length > 0 ? filtered.filter(t => categories.includes(t.category)) : filtered
-        filtered = !done ? filtered.filter(t => !t.done) : filtered
-
-        setFilteredTasks(filtered)
-    }
-
     const handleCategory = (category) => {
-        let newCategories
-        if (!activeCategories.includes(category)) {
-            newCategories = [...activeCategories, category]
-        } else {
-            const index = activeCategories.indexOf(category)
-            newCategories = activeCategories
-            newCategories.splice(index, 1)
-        }
-
-        setActiveCategories(newCategories) 
-        applyFilters(newCategories, showDone)
+        setActiveCategories(prev => {
+            if (prev.includes(category)) {
+                return prev.filter(c => c !== category)
+            } else {
+                return [...prev, category]
+            }
+        })
     }
-
-    const handleShowDone = () => {
-        const newShowDone = !showDone
-        setShowDone(newShowDone)
-        applyFilters(activeCategories, newShowDone)
-    } 
 
     const toggleDropdown = (id) => {
         setDropdownId(prev => (prev === id ? null : id))
@@ -65,15 +46,15 @@ function DropdownFilter({ tasks, dropdownId, setDropdownId, categories, activeCa
                 className={`dropdown mt-8 -translate-x-3 absolute rounded-xl bg-surface-a10 ring-1 ring-surface-a20 transition ${dropdownId === -1 ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}`}
             >
                 <ul className="text-surface-a50 select-none">
-                    {categories.map((item, index) =>
-                        <li key={index}
+                    {categories.map(item =>
+                        <li key={item}
                             onClick={() => handleCategory(item)}
                             className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${activeCategories.includes(item) ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
                             {item}
                         </li>
                     )}
                         <li key="done-tasks"
-                            onClick={handleShowDone}
+                            onClick={() => setShowDone(p => !p)}
                             className={`my-2 mx-2 py-1 px-3 text-sm rounded-lg hover:text-white cursor-pointer transition ${showDone ? 'bg-primary-a0 text-white' : 'bg-surface-a20'}`}>
                             Done 
                         </li>

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-function DropdownSort({ filteredTasks, setFilteredTasks, dropdownId, setDropdownId, activeSort, setActiveSort }) {
+function DropdownSort({ dropdownId, setDropdownId, activeSort, setActiveSort }) {
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null)
 
@@ -20,29 +20,10 @@ function DropdownSort({ filteredTasks, setFilteredTasks, dropdownId, setDropdown
         }
     }, [])
 
-    const applySort = (sort) => {
-        const activeTasks = filteredTasks.filter(t => !t.done)
-        const doneTasks = filteredTasks.filter(t => t.done)
-        switch(sort) {
-            case 'deadline':
-                setFilteredTasks(activeTasks.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)}).concat(doneTasks))
-                break
-            case 'priority':
-                setFilteredTasks(activeTasks.sort((a, b) => b.priority - a.priority).concat(doneTasks))
-                break
-            case 'category':
-                setFilteredTasks(activeTasks.sort((a, b) => a.category.localeCompare(b.category)).concat(doneTasks))
-                break
-            default:
-                setFilteredTasks(activeTasks.sort((a, b) => b.id - a.id).concat(doneTasks))
-                break
-        }
-    }
 
     const handleSort = (category) => {
         const newSort = category !== activeSort ? category : ''
         setActiveSort(newSort)
-        applySort(newSort)
     }
 
     const toggleDropdown = (id) => {

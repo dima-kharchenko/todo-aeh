@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { updateTask } from "../api";
 
-function TaskBody ({tasks, task, setTasks, filteredTasks, setFilteredTasks}) {
+function TaskBody ({ tasks, task, setTasks }) {
     const inputRef = useRef(null)
     const [submitted, setSubmitted] = useState(false)
 
@@ -11,8 +11,6 @@ function TaskBody ({tasks, task, setTasks, filteredTasks, setFilteredTasks}) {
         ).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
 
-        const updatedFilteredTasks = filteredTasks.map(t => t.id === task.id ? { ...t, body: e.target.value } : t)
-        setFilteredTasks(updatedFilteredTasks)
         setSubmitted(false)
     }
 
