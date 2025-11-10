@@ -1,13 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 
-function DropdownCategories({tasks, task, dropdownId, setDropdownId, categories, setCategories, updateTaskLocally}){
+function DropdownCategories({task, dropdownId, setDropdownId, categories, updateTaskLocally}){
     const [newCategory, setNewCategory] = useState('')
     const dropdownRef = useRef(null)
     const buttonRef = useRef(null);
-
-    useEffect(() => {
-        setCategories([...new Set(tasks.filter(task => !task.done).map(task => task.category).filter(Boolean))])
-    }, [])
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -32,7 +28,6 @@ function DropdownCategories({tasks, task, dropdownId, setDropdownId, categories,
 
     const handleAddCategory = async (e) => {
         e.preventDefault()
-        setCategories(p => ([...p, newCategory]))
         updateTaskLocally(task.id, {category: newCategory})
         setNewCategory('')
     }

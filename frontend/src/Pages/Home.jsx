@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getTasks, updateTask, deleteTask } from "../api";
 import Header from "../Components/Header";
 import NewTask from "../Components/NewTask";
@@ -11,46 +11,61 @@ import DropdownSort from "../Components/DropdownSort";
 
 function Home() {
     const [tasks, setTasks] = useState([])
-    const [filteredTasks, setFilteredTasks] = useState([])
     const [activeCategories, setActiveCategories] = useState([])
     const [activeSort, setActiveSort] = useState('')
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
-    const [categories, setCategories] = useState([])
     const [deleteMode, setDeleteMode] = useState(false)
 
     useEffect(() => {
         (async () => {
             try {
-                let data = await getTasks()
-                data = data.sort((a, b) => b.id - a.id).sort((a, b) => a.done - b.done)
+                const data = await getTasks()
+                data.sort((a, b) => b.id - a.id || a.done - b.done)
                 setTasks(data)
-                setFilteredTasks(data.filter(task => !task.done))
             } catch(err) {
                 console.log(err)
             }
         })()
     }, [])
 
-    useEffect(() => {
-        const newFiltered = tasks.filter(task => {
+    const categories = useMemo(() => {
+        const s = new Set();
+        tasks.forEach(t => { if (!t.done && t.category) s.add(t.category) });
+        return Array.from(s);
+    }, [tasks]);
+
+    const filteredTasks = useMemo(() => {
+        let res = tasks.filter(task => {
             const matchesCategories = activeCategories.length > 0 ? activeCategories.includes(task.category) : true
             const matchesDone = showDone || !task.done
             return matchesCategories && matchesDone
         })
-        setFilteredTasks(newFiltered)
-    }, [activeCategories, showDone])
-    
+
+        switch(activeSort) {
+            case 'deadline':
+                res = res.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)})
+                break
+            case 'priority':
+                res = res.sort((a, b) => b.priority - a.priority)
+                break
+            case 'category':
+                res = res.sort((a, b) => a.category.localeCompare(b.category))
+                break
+            default:
+                res = res.sort((a, b) => (a.done - b.done) || (b.id - a.id))
+                break
+        }
+
+        return res
+    }, [tasks, activeCategories, activeSort, showDone])
+
+
     const updateTaskLocally = async (id, update) => {
         const updatedTasks = tasks.map(task =>
             task.id === id ? { ...task, ...update } : task
         ).sort((a, b) => b.id - a.id)
         setTasks(updatedTasks)
-
-        const updatedFilteredTasks = filteredTasks.map(task =>
-            task.id === id ? { ...task, ...update } : task
-        )
-        setFilteredTasks(updatedFilteredTasks)
 
         const updatedTask = updatedTasks.find(task => task.id === id)
         await updateTask(updatedTask)
@@ -64,11 +79,7 @@ function Home() {
 
     const handleDelete = async (id) => {
         await deleteTask(id)
-        const updatedTasks = tasks.filter(t => t.id !== id)
-        setTasks(updatedTasks)
-
-        const updatedFilteredTasks = filteredTasks.filter(t => t.id !== id)
-        setFilteredTasks(updatedFilteredTasks)
+        setTasks(tasks.filter(t => t.id !== id))
     }
 
     const resetFilters = async () => {
@@ -85,16 +96,11 @@ function Home() {
         <div className="pt-8 w-1/2 mx-auto text-center">
             <NewTask 
                 setTasks={setTasks} 
-                setFilteredTasks={setFilteredTasks}
                 activeCategories={activeCategories}
                 showDone={showDone}
             />
             <div className="flex mt-2 px-4 gap-2">
                 <DropdownFilter 
-                    tasks={tasks} 
-                    setTasks={setTasks} 
-                    filteredTasks={filteredTasks} 
-                    setFilteredTasks={setFilteredTasks}
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
                     categories={categories} 
@@ -102,11 +108,8 @@ function Home() {
                     setActiveCategories={setActiveCategories}
                     showDone={showDone}
                     setShowDone={setShowDone}
-                    updateTaskLocally={updateTaskLocally}
                 />
                 <DropdownSort 
-                    filteredTasks={filteredTasks}
-                    setFilteredTasks={setFilteredTasks}
                     dropdownId={dropdownId} 
                     setDropdownId={setDropdownId} 
                     activeSort={activeSort}
@@ -137,20 +140,16 @@ function Home() {
                         />
                     </form>
                     <DropdownCategories 
-                        tasks={tasks} 
                         task={task} 
                         dropdownId={dropdownId} 
                         setDropdownId={setDropdownId} 
                         categories={categories} 
-                        setCategories={setCategories}
                         updateTaskLocally={updateTaskLocally}
                     /> 
                     <TaskBody
                         tasks={tasks} 
                         task={task} 
                         setTasks={setTasks} 
-                        filteredTasks={filteredTasks}
-                        setFilteredTasks={setFilteredTasks} 
                     /> 
                     <div className="relative ml-auto flex items-center">
                         <div className={`${deleteMode ? 'opacity-0 pointer-events-none' : 'opacity-100'} flex gap-4 transition-opacity`}>
