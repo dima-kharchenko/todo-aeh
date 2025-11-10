@@ -28,12 +28,13 @@ function TaskBody ({ tasks, task, setTasks }) {
         <form onSubmit={async (e) => {
             await handleBodySubmit(e)
             inputRef.current?.blur()
-        }}>
+        }}
+        className={'flex-1 text-left'}>
             <input
                 ref={inputRef}
                 type="text"
                 name={`body-${task.id}`}
-                className={`${task.done ? 'text-surface-a30' : ''} focus:outline-none transition`}
+                className={`${task.done ? 'text-surface-a30' : ''} w-full pr-3 text-ellipsis focus:outline-none transition`}
                 value={task.body}
                 onChange={(e) => handleBodyChange(e)}
                 onBlur={(e) => handleBodySubmit(e)}
