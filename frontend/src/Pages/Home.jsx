@@ -16,6 +16,7 @@ function Home() {
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
     const [deleteMode, setDeleteMode] = useState(false)
+    const [recentlyCreated, setRecentlyCreated] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -39,7 +40,10 @@ function Home() {
         let res = tasks.filter(task => {
             const matchesCategories = activeCategories.length > 0 ? activeCategories.includes(task.category) : true
             const matchesDone = showDone || !task.done
-            return matchesCategories && matchesDone
+            const isRecentlyCreated = recentlyCreated.includes(task.id)
+            setRecentlyCreated([])
+
+            return (matchesCategories && matchesDone) || isRecentlyCreated
         })
 
         switch(activeSort) {
@@ -96,8 +100,7 @@ function Home() {
         <div className="pt-8 w-1/2 mx-auto text-center">
             <NewTask 
                 setTasks={setTasks} 
-                activeCategories={activeCategories}
-                showDone={showDone}
+                setRecentlyCreated={setRecentlyCreated}
             />
             <div className="flex mt-2 px-4 gap-2">
                 <DropdownFilter 
