@@ -131,8 +131,8 @@ function Home() {
                 </button>
             </div>
             <div className="mt-8 space-y-2">
-            {filteredTasks.map((task, index) => 
-                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={index}>
+            {filteredTasks.map(task => 
+                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={task.id}>
                     <form className="w-4 h-4 mr-2">
                         <input 
                             type="checkbox"
