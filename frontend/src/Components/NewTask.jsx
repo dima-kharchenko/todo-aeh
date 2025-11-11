@@ -1,6 +1,7 @@
 import { createTask } from "../api";
 import { useState } from "react";
-function NewTask({ setTasks }) {
+
+function NewTask({ setTasks, setRecentlyCreated }) {
     const [newTask, setNewTask] = useState({body: '', category: '', done: false, deadline: null, priority: 0})
 
     const handleSubmit = async (e) => {
@@ -9,6 +10,7 @@ function NewTask({ setTasks }) {
             const res = await createTask(newTask)
             setNewTask({body: '', category: '', done: false, deadline: null, priority: 0})
             setTasks(p => [res, ...p])
+            setRecentlyCreated(p => [res.id, ...p])
         }
     }
 

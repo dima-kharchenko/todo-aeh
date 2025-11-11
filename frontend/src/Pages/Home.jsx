@@ -16,6 +16,8 @@ function Home() {
     const [showDone, setShowDone] = useState(false)
     const [dropdownId, setDropdownId] = useState(null)
     const [deleteMode, setDeleteMode] = useState(false)
+    const [recentlyCreated, setRecentlyCreated] = useState([])
+    const [recentlyDone, setRecentlyDone] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -30,32 +32,42 @@ function Home() {
     }, [])
 
     const categories = useMemo(() => {
-        const s = new Set();
-        tasks.forEach(t => { if (!t.done && t.category) s.add(t.category) });
-        return Array.from(s);
+        const s = new Set()
+        tasks.forEach(t => { if (!t.done && t.category) s.add(t.category) })
+        return Array.from(s)
     }, [tasks]);
 
     const filteredTasks = useMemo(() => {
         let res = tasks.filter(task => {
             const matchesCategories = activeCategories.length > 0 ? activeCategories.includes(task.category) : true
-            const matchesDone = showDone || !task.done
-            return matchesCategories && matchesDone
+            const matchesDone = showDone || !task.done || recentlyDone.includes(task.id)
+
+            return (matchesCategories && matchesDone) || recentlyCreated.includes(task.id)
         })
+        setRecentlyCreated([])
 
         switch(activeSort) {
             case 'deadline':
                 res = res.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)})
                 break
             case 'priority':
-                res = res.sort((a, b) => b.priority - a.priority)
+                res = res.sort((a, b) => (a.done - b.done) || (b.priority - a.priority))
                 break
             case 'category':
                 res = res.sort((a, b) => a.category.localeCompare(b.category))
                 break
             default:
-                res = res.sort((a, b) => (a.done - b.done) || (b.id - a.id))
+                res = res.sort((a, b) => {
+                    if (recentlyDone.includes(a.id) && recentlyDone.includes(b.id)) return b.id - a.id
+                    if (recentlyDone.includes(a.id)) return -1
+                    if (recentlyDone.includes(b.id)) return 1
+
+                    return (a.done - b.done) || (b.id - a.id)
+                })
                 break
+
         }
+        setRecentlyDone([])
 
         return res
     }, [tasks, activeCategories, activeSort, showDone])
@@ -73,6 +85,7 @@ function Home() {
 
     const handleCheckbox = async (id) => {
         const task = tasks.find(task => task.id === id)
+        setRecentlyDone(p => [id, ...p])
         
         updateTaskLocally(id, {done: !task.done})
     }
@@ -96,8 +109,7 @@ function Home() {
         <div className="pt-8 w-1/2 mx-auto text-center">
             <NewTask 
                 setTasks={setTasks} 
-                activeCategories={activeCategories}
-                showDone={showDone}
+                setRecentlyCreated={setRecentlyCreated}
             />
             <div className="flex mt-2 px-4 gap-2">
                 <DropdownFilter 
@@ -128,8 +140,8 @@ function Home() {
                 </button>
             </div>
             <div className="mt-8 space-y-2">
-            {filteredTasks.map((task, index) => 
-                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={index}>
+            {filteredTasks.map(task => 
+                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={task.id}>
                     <form className="w-4 h-4 mr-2">
                         <input 
                             type="checkbox"
