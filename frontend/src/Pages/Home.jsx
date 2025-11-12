@@ -169,7 +169,7 @@ function Home() {
                             <Priority task={task} updateTaskLocally={updateTaskLocally}/>
                         </div>
                         <button
-                            className={`${deleteMode ? 'opacity-100' : 'opacity-0 pointer-events-none'} text-sm focus:outline-none pr-1 absolute right-0 cursor-pointer hover:text-red-400 transition`}
+                            className={`${deleteMode ? 'opacity-100' : 'opacity-0 pointer-events-none'} text-sm focus:outline-none pr-1 absolute right-0 cursor-pointer text-surface-a20 hover:text-red-400 transition`}
                             onClick={() => handleDelete(task.id)}
                         >
                             <i className="fa-solid fa-trash"></i> 
