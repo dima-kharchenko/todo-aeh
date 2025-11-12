@@ -1,14 +1,19 @@
 FROM node:20 AS builder
-
 WORKDIR /app
-COPY . .
 
-RUN npm install && npm run build
+COPY frontend/package*.json ./
+RUN npm ci --omit=dev
 
-FROM alpine:3.18
+COPY frontend .
+RUN npm run build
 
-RUN mkdir -p /frontend_build
+FROM nginx:alpine
 
-COPY --from=builder /app/dist /frontend_build
-VOLUME ["/frontend_build"]
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
