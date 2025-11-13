@@ -44,7 +44,7 @@ function Home() {
 
             return (matchesCategories && matchesDone) || recentlyCreated.includes(task.id)
         })
-        setRecentlyCreated([])
+        console.log(recentlyDone)
 
         switch(activeSort) {
             case 'deadline':
@@ -65,12 +65,10 @@ function Home() {
                     return (a.done - b.done) || (b.id - a.id)
                 })
                 break
-
         }
-        setRecentlyDone([])
 
         return res
-    }, [tasks, activeCategories, activeSort, showDone])
+    }, [tasks, activeCategories, activeSort, showDone, recentlyDone, recentlyCreated])
 
 
     const updateTaskLocally = async (id, update) => {
@@ -86,6 +84,10 @@ function Home() {
     const handleCheckbox = async (id) => {
         const task = tasks.find(task => task.id === id)
         setRecentlyDone(p => [id, ...p])
+
+        setTimeout(() => {
+            setRecentlyDone(p => p.filter(x => x !== id))
+        }, 3000)
         
         updateTaskLocally(id, {done: !task.done})
     }

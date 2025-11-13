@@ -11,6 +11,10 @@ function NewTask({ setTasks, setRecentlyCreated }) {
             setNewTask({body: '', category: '', done: false, deadline: null, priority: 0})
             setTasks(p => [res, ...p])
             setRecentlyCreated(p => [res.id, ...p])
+
+            setTimeout(() => {
+                setRecentlyCreated(p => p.filter(x => x !== res.id))
+            }, 3000)
         }
     }
 
