@@ -44,7 +44,6 @@ function Home() {
 
             return (matchesCategories && matchesDone) || recentlyCreated.includes(task.id)
         })
-        setRecentlyCreated([])
 
         switch(activeSort) {
             case 'deadline':
@@ -65,12 +64,10 @@ function Home() {
                     return (a.done - b.done) || (b.id - a.id)
                 })
                 break
-
         }
-        setRecentlyDone([])
 
         return res
-    }, [tasks, activeCategories, activeSort, showDone])
+    }, [tasks, activeCategories, activeSort, showDone, recentlyDone, recentlyCreated])
 
 
     const updateTaskLocally = async (id, update) => {
@@ -86,6 +83,10 @@ function Home() {
     const handleCheckbox = async (id) => {
         const task = tasks.find(task => task.id === id)
         setRecentlyDone(p => [id, ...p])
+
+        setTimeout(() => {
+            setRecentlyDone(p => p.filter(x => x !== id))
+        }, 3000)
         
         updateTaskLocally(id, {done: !task.done})
     }
@@ -141,7 +142,7 @@ function Home() {
             </div>
             <div className="mt-8 space-y-2">
             {filteredTasks.map(task => 
-                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={task.id}>
+                <div className={`transition flex px-3 py-2 rounded-lg bg-surface-a10  ${recentlyCreated.includes(task.id) ? 'animate-fade-in' : ''} ${(recentlyCreated.includes(task.id) && activeCategories.length > 0) || recentlyDone.includes(task.id) ? 'animate-fade-out' : ''}`} key={task.id}>
                     <form className="w-4 h-4 mr-2">
                         <input 
                             type="checkbox"
@@ -176,7 +177,6 @@ function Home() {
                         </button>
                     </div>                
                 </div>
-
             )}
             </div>
         </div>

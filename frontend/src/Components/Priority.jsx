@@ -41,4 +41,4 @@ function Priority({ task, updateTaskLocally }) {
     )
 }
 
-export default Priority;
+export default Priority
