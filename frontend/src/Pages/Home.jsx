@@ -83,10 +83,14 @@ function Home() {
     const handleCheckbox = async (id) => {
         const task = tasks.find(task => task.id === id)
         setRecentlyDone(p => [id, ...p])
-
-        setTimeout(() => {
+        
+        if (!task.done) {
+            setTimeout(() => {
+                setRecentlyDone(p => p.filter(x => x !== id))
+            }, 3000)
+        } else {
             setRecentlyDone(p => p.filter(x => x !== id))
-        }, 3000)
+        }
         
         updateTaskLocally(id, {done: !task.done})
     }
