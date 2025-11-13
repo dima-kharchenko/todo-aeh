@@ -35,7 +35,7 @@ function DropdownSort({ dropdownId, setDropdownId, activeSort, setActiveSort }) 
             <button
                 ref={buttonRef}
                 onClick={() => toggleDropdown(-2)}
-                className="ml-2 text-left text-surface-a30 hover:text-primary-a0 cursor-pointer transition"
+                className={`ml-2 text-left ${activeSort ? 'text-primary-a0' : 'text-surface-a30'} hover:text-primary-a0 cursor-pointer transition`}
             >Sort</button>
             <div
                 ref={dropdownRef}
