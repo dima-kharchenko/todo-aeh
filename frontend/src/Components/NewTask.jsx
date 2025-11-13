@@ -36,4 +36,4 @@ function NewTask({ setTasks, setRecentlyCreated }) {
     )
 }
 
-export default NewTask;
+export default NewTask

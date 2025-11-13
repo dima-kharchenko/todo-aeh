@@ -63,5 +63,5 @@ function Deadline({ task, updateTaskLocally }) {
     )
 }
 
-export default Deadline;
+export default Deadline
 

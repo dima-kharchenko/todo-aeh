@@ -44,4 +44,4 @@ function TaskBody ({ tasks, task, setTasks }) {
     )
 }
 
-export default TaskBody;
+export default TaskBody

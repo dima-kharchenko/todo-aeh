@@ -68,4 +68,4 @@ function DropdownCategories({task, dropdownId, setDropdownId, categories, update
     )
 }
 
-export default DropdownCategories;
+export default DropdownCategories

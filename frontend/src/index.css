@@ -16,6 +16,25 @@
     --color-surface-a30: #575757;
     --color-surface-a40: #717171;
     --color-surface-a50: #8b8b8b;
+
+    --animate-fade-in: fade-in-scale 0.3s ease-out;
+    @keyframes fade-in-scale {
+        0% {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    --animate-fade-out: fade-out-scale 3s ease-out;
+    @keyframes fade-out-scale {
+        100% {
+            opacity: 0;
+        }
+    }
 }
 
 body {background-color: #121212;}

@@ -44,7 +44,6 @@ function Home() {
 
             return (matchesCategories && matchesDone) || recentlyCreated.includes(task.id)
         })
-        console.log(recentlyDone)
 
         switch(activeSort) {
             case 'deadline':
@@ -143,7 +142,7 @@ function Home() {
             </div>
             <div className="mt-8 space-y-2">
             {filteredTasks.map(task => 
-                <div className="transition flex px-3 py-2 bg-surface-a10 rounded-lg" key={task.id}>
+                <div className={`transition flex px-3 py-2 rounded-lg bg-surface-a10  ${recentlyCreated.includes(task.id) ? 'animate-fade-in' : ''} ${(recentlyCreated.includes(task.id) && activeCategories.length > 0) || recentlyDone.includes(task.id) ? 'animate-fade-out' : ''}`} key={task.id}>
                     <form className="w-4 h-4 mr-2">
                         <input 
                             type="checkbox"
@@ -178,7 +177,6 @@ function Home() {
                         </button>
                     </div>                
                 </div>
-
             )}
             </div>
         </div>
