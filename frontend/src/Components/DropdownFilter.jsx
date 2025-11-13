@@ -39,7 +39,7 @@ function DropdownFilter({ dropdownId, setDropdownId, categories, activeCategorie
             <button
                 ref={buttonRef}
                 onClick={() => toggleDropdown(-1)}
-                className="text-left text-surface-a30 hover:text-primary-a0 cursor-pointer transition"
+                className={`text-left ${activeCategories.length > 0 ? 'text-primary-a0' : 'text-surface-a30 '} hover:text-primary-a0 cursor-pointer transition`}
             >Filter</button>
             <div
                 ref={dropdownRef}
