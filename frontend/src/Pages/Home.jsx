@@ -57,11 +57,11 @@ function Home() {
                 break
             default:
                 res = res.sort((a, b) => {
-                    if (recentlyDone.includes(a.id) && recentlyDone.includes(b.id)) return b.id - a.id
-                    if (recentlyDone.includes(a.id)) return -1
-                    if (recentlyDone.includes(b.id)) return 1
-
-                    return (a.done - b.done) || (b.id - a.id)
+                    if (showDone) {
+                      return (a.done - b.done) || (b.id - a.id) 
+                    } else {
+                      return b.id - a.id
+                    }
                 })
                 break
         }
