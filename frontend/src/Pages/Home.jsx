@@ -111,7 +111,7 @@ function Home() {
     <>
     <Header />
     <div className="mt-12 text-white">
-        <div className="pt-8 w-1/2 mx-auto text-center">
+        <div className="pt-8 lg:w-1/2 md:w-3/4 w-8/10 mx-auto text-center">
             <NewTask 
                 setTasks={setTasks} 
                 setRecentlyCreated={setRecentlyCreated}
