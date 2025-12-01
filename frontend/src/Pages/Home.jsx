@@ -50,7 +50,14 @@ function Home() {
                 res = res.sort((a, b) => {return new Date(a.deadline) - new Date(b.deadline)})
                 break
             case 'priority':
-                res = res.sort((a, b) => (a.done - b.done) || (b.priority - a.priority))
+                res = res.sort((a, b) => {
+                    if (showDone) {
+                      return (a.done - b.done) || (b.priority - a.priority) 
+                    } else {
+                      return b.priority - a.priority
+                    }
+                })
+
                 break
             case 'category':
                 res = res.sort((a, b) => a.category.localeCompare(b.category))
