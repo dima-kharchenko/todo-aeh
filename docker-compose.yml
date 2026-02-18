@@ -1,27 +1,16 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    volumes:
-      - ./backend/db.sqlite3:/app/db.sqlite3
-      - static_volume:/app/staticfiles
+    build: ./backend
     ports:
-      - "8001:8000"
+      - "8000:8000"
     restart: unless-stopped
 
   frontend:
     build:
       context: .
       dockerfile: ./frontend/Dockerfile
+    ports:
+        - "80:80"
     depends_on:
       - backend
-    ports:
-      - "82:80"
-    volumes:
-      - static_volume:/app/staticfiles:ro
     restart: unless-stopped
-
-volumes:
-  static_volume:
-
