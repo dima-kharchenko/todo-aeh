@@ -169,7 +169,9 @@ CORS_ALLOWED_ORIGINS = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://raspi.local:5173",
-        "http://todo.home"
+        "http://todo.home",
         "http://localhost",
+        "http://100.88.109.24",
+
 ]
 
