@@ -1,13 +1,20 @@
-FROM python:3.11-slim
+FROM python:3.13
 
 WORKDIR /app
 
-COPY backend/requirements.txt .
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-RUN pip install --no-cache-dir -r requirements.txt && pip install gunicorn whitenoise
+RUN pip install --upgrade pip 
 
-COPY backend/ .
+COPY requirements.txt .
 
-RUN python manage.py collectstatic --noinput
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
 
 CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
